@@ -2,13 +2,17 @@
 
 namespace app\controllers;
 
+use app\models\Company;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\User;
+use app\models\UserActivity;
 
 class SiteController extends Controller
 {
@@ -61,8 +65,15 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
-    }
+        $dt_posts=new ActiveDataProvider([
+            'query'=>Company::find()->orderBy('name'),
+            'pagination'=>[
+                'pageSize'=>6
+            ]
+        ]);
+        return $this->render('index',[
+            'dt_posts'=>$dt_posts,
+        ]);    }
 
     /**
      * Login action.
@@ -124,5 +135,36 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionRegister()
+    {
+        $model = new User();
+        $userActivity = new UserActivity();
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->validate()) {
+                // form inputs are valid, do something here
+                $model->name = $_POST['User']['name'];
+                $model->email = $_POST['User']['email'];
+                $model->password = password_hash($_POST['User']['password'], PASSWORD_DEFAULT);
+                $model->auth_key = md5(random_bytes(5));
+                $model->access_token = password_hash(random_bytes(10), PASSWORD_DEFAULT);
+                $model->created_at = date("Y-m-d h:i:s");
+
+
+                if ($model->save()) {
+                    /*$userActivity->user = $model->id;
+                    $userActivity->created = date("Y-m-d h:i:s");
+                    $userActivity->action = "Inserting user";
+                    $userActivity->save(false);*/
+                    return $this->redirect(['login']);
+                }
+            }
+        }
+
+        return $this->render('register', [
+            'model' => $model,
+        ]);
     }
 }
