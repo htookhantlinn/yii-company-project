@@ -6,6 +6,7 @@ use app\models\UserActivity;
 use Yii;
 use app\models\Company;
 use app\models\CompanySearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -22,6 +23,16 @@ class CompanyController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['create', 'update', 'delete', 'view', 'index'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ]
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -107,14 +118,23 @@ class CompanyController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->db->createCommand()
+                ->insert('user_activity', ['user' => Yii::$app->user->id, 'company' => $model->id,
+                    'modified' => date("Y-m-d h:i:s"),
+                    'created' => date("Y-m-d h:i:s"), 'action' => 'User (' . User::find()
+                            ->select('name')
+                            ->where(['id' => Yii::$app->user->id])
+                            ->one()->name . ') is updated (' . $model->name. ' )company'])
+                ->execute();
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        if ($model->user0->id === Yii::$app->user->id) {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+        return $this->redirect('/site/login');
     }
 
     /**
@@ -126,7 +146,18 @@ class CompanyController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        if ($model->user0->id === Yii::$app->user->id) {
+            $this->findModel($id)->delete();
+            Yii::$app->db->createCommand()
+                ->insert('user_activity', ['user' => Yii::$app->user->id, 'company' => $model->id,
+                    'modified' => date("Y-m-d h:i:s"),
+                    'created' => date("Y-m-d h:i:s"), 'action' => 'User (' . User::find()
+                            ->select('name')
+                            ->where(['id' => Yii::$app->user->id])
+                            ->one()->name . ') is deleted (' . $model->name. ' )company'])
+                ->execute();
+        }
 
         return $this->redirect(['index']);
     }
