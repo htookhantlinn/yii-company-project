@@ -38,6 +38,7 @@ class Company extends \yii\db\ActiveRecord
         return [
             [['user', 'category'], 'required'],
             [['user', 'category'], 'integer'],
+            [['name', 'description','address', 'ph_no','category'], 'required'],
             [['name', 'description', 'website', 'address', 'ph_no'], 'string', 'max' => 255],
             [['category'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category' => 'id']],
             [['user'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user' => 'id']],

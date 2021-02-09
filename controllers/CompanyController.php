@@ -11,6 +11,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\User;
+use app\models\CompanyCategory;
 
 /**
  * CompanyController implements the CRUD actions for Company model.
@@ -81,6 +82,7 @@ class CompanyController extends Controller
     {
         $model = new Company();
         $userActivity = new UserActivity();
+        $companyCategory=new CompanyCategory();
 
         if ($model->load(Yii::$app->request->post())) {
             $model->name = $_POST['Company']['name'];
@@ -89,7 +91,7 @@ class CompanyController extends Controller
             $model->address = $_POST['Company']['address'];
             $model->ph_no = $_POST['Company']['ph_no'];
             $model->user = Yii::$app->user->id;
-            $model->category = $_POST['Company']['id'];
+            $model->category = $_GET['id'];
             if ($model->save()) {
                 $userActivity->user = $model->user;
                 $userActivity->company = $model->id;
@@ -101,6 +103,10 @@ class CompanyController extends Controller
                         ->where(['id' => Yii::$app->user->id])
                         ->one()->name . ')is created ' . $model->name . 'company.';
                 $userActivity->save(false);
+
+                $companyCategory->company=$model->id;
+                $companyCategory->category=$model->category;
+                $companyCategory->save(false);
                 return $this->redirect(['index']);
             }
         }

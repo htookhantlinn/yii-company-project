@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use phpDocumentor\Reflection\Types\Parent_;
 use Yii;
 
 /**
@@ -20,6 +21,7 @@ use Yii;
  */
 class Category extends \yii\db\ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
@@ -117,4 +119,28 @@ class Category extends \yii\db\ActiveRecord
 
         return $categories;
     }
+
+    public  function  categoryTree($parent_id = 0, $sub_mark = '')
+    {
+        $hkl = (new \yii\db\Query())
+            ->select(['id','parent_id','name'])
+            ->from('category')
+            ->where(['parent_id'=>$parent_id])
+            ->orderBy(['name'=>SORT_ASC])
+            ->all();
+        foreach ($hkl as $temp){
+            echo '<option value="'.$temp['id'].'">'.$sub_mark.$temp['name'].'</option>';
+            Category::categoryTree($temp['id'], $sub_mark . '---');
+        }
+
+
+        return $hkl;
+
+    }
+
+
+
+
+
+
 }

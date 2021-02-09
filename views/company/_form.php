@@ -25,19 +25,25 @@ use app\models\Category;
 
     <?= $form->field($model, 'ph_no')->textInput(['maxlength' => true]) ?>
 
-    <?php
+   <!-- <?php
 /*    $category = new Category;
     $categories = $category->getAllCategories(1);
     $items = ArrayHelper::map($categories, 'id', 'name');
-    */?><!--
+    */?>
 
-    <?php /*echo $form->field($hkl, 'parent_id')->dropDownList($items, ['prompt' => '--None--']); */?>
+    <?php /*echo $form->field($hkl, 'parent_id')->dropDownList($items, ['prompt' => '--None--']); */
+ //   $c=new Category();
+   // $c->categoryTree1();
+    ?>
     'btn btn-success']) ?>-->
 
-    <?= $form->field($model, 'id')->dropDownList(
+    <?/*= $form->field($model, 'category')->dropDownList(
         ArrayHelper::map(\app\models\Category::find()->all(), 'id', 'name'),
         ['prompt' => 'Select Category']
-    ) ?>
+    ) */?>
+    <select name="category">
+        <?php Category::categoryTree(); ?>
+    </select>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

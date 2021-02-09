@@ -37,6 +37,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return [
             [['created_at'], 'safe'],
             [['name', 'email', 'password', 'auth_key', 'access_token', 'role'], 'string', 'max' => 255],
+            ['email','email'],
+            [['name','email','password'],'required']
         ];
     }
 

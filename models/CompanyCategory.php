@@ -68,4 +68,8 @@ class CompanyCategory extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Company::className(), ['id' => 'company']);
     }
+
+    public function savingCompanyCategory(CompanyCategory $company_category){
+
+    }
 }
