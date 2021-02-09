@@ -7,8 +7,8 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Company */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Companies', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+/*$this->params['breadcrumbs'][] = ['label' => 'Companies', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;*/
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="company-view">
@@ -37,12 +37,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name',
-            'description',
             'website',
-            'address',
             'ph_no',
             'user',
-            'category',
+            'description:html',    // description attribute in HTML
+            [                      // the owner name of the model
+                'label' => 'User Name',
+                'value' => $model->user0->name,
+            ],
+            'address:html',    // description attribute in HTML
+            [                      // the owner name of the model
+                'label' => 'Category',
+                'value' => $model->category0->name,
+            ],
+
+
+
         ],
     ]) ?>
 

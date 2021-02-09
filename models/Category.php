@@ -70,6 +70,7 @@ class Category extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
+
     public function getCategories()
     {
         return $this->hasMany(Category::className(), ['parent_id' => 'id']);
@@ -93,5 +94,27 @@ class Category extends \yii\db\ActiveRecord
     public function getCompanyCategories()
     {
         return $this->hasMany(CompanyCategory::className(), ['category' => 'id']);
+    }
+
+    public function getAllCategories($parent_id = 1, $exclude = '', $space = '', $categories=''){
+        if($parent_id == 1){
+            $space = '';
+            $categories = array();
+        }else{
+            $space .='- ';
+        }
+
+        $model = Category::findAll([
+            'parent_id' => $parent_id,
+        ]);
+        if(!empty($model)){
+            foreach ($model as $key) {
+                if($key->id == $exclude) continue;
+                $categories[] = array('id'=>$key->id, 'name'=>$space.$key->name);
+                $categories = $this->getCategories($key->id, $exclude, $space, $categories);
+            }
+        }
+
+        return $categories;
     }
 }

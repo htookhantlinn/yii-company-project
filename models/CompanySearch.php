@@ -14,11 +14,14 @@ class CompanySearch extends Company
     /**
      * {@inheritdoc}
      */
+
+    public $globalSearch;
+
     public function rules()
     {
         return [
             [['id', 'user', 'category'], 'integer'],
-            [['name', 'description', 'website', 'address', 'ph_no'], 'safe'],
+            [['name','globalSearch', 'description', 'website', 'address', 'ph_no'], 'safe'],
         ];
     }
 
@@ -63,11 +66,11 @@ class CompanySearch extends Company
             'category' => $this->category,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'website', $this->website])
-            ->andFilterWhere(['like', 'address', $this->address])
-            ->andFilterWhere(['like', 'ph_no', $this->ph_no]);
+        $query->orFilterWhere(['like', 'name', $this->globalSearch])
+            ->orFilterWhere(['like', 'description', $this->globalSearch])
+            ->orFilterWhere(['like', 'website', $this->globalSearch])
+            ->orFilterWhere(['like', 'address', $this->globalSearch])
+            ->orFilterWhere(['like', 'ph_no', $this->globalSearch]);
 
         return $dataProvider;
     }
