@@ -37,13 +37,11 @@ use app\models\Category;
     ?>
     'btn btn-success']) ?>-->
 
-    <?/*= $form->field($model, 'category')->dropDownList(
+    <?= $form->field($model, 'category')->dropDownList(
         ArrayHelper::map(\app\models\Category::find()->all(), 'id', 'name'),
         ['prompt' => 'Select Category']
-    ) */?>
-    <select name="category">
-        <?php Category::categoryTree(); ?>
-    </select>
+    ) ?>
+    
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
@@ -52,3 +50,4 @@ use app\models\Category;
     <?php ActiveForm::end(); ?>
 
 </div>
+

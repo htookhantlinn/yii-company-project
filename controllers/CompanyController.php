@@ -91,7 +91,7 @@ class CompanyController extends Controller
             $model->address = $_POST['Company']['address'];
             $model->ph_no = $_POST['Company']['ph_no'];
             $model->user = Yii::$app->user->id;
-            $model->category = $_GET['id'];
+            $model->category = $_POST['Company']['category'];
             if ($model->save()) {
                 $userActivity->user = $model->user;
                 $userActivity->company = $model->id;
