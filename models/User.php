@@ -99,7 +99,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return password_verify($password, $this->password);
     }
 
-    public function findByUsername($username)
+    public static function findByUsername($username)
     {
         return self::findOne(['name' => $username]);
 

@@ -1,7 +1,8 @@
 <?php
 /* @var $model app\models\Company */
 
-use yii\bootstrap\html;
+use yii\helpers\Html;
+
 
 ?>
 
