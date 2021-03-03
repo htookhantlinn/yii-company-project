@@ -104,4 +104,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return self::findOne(['name' => $username]);
 
     }
+
+    public static function findByEmail($email){
+        return self::findOne(['email'=>$email]);
+    }
 }
