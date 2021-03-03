@@ -52,7 +52,7 @@ AppAsset::register($this);
                 . '</li>' . '<li>'
                 . Html::beginForm(['/company/index'], 'post')
                 . Html::submitButton(
-                    'Search',
+                    'Search Space',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()
